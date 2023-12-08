@@ -1,6 +1,6 @@
 # HabitApp
 
-![Gambar Mockup](D:\projectt\HabitApp\mokcup.jpg)
+![Gambar Mockup](mokcup.jpg)
 
 ## Deskripsi
 
