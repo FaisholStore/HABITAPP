@@ -47,3 +47,6 @@ Write a UI test to validate that when the user taps "Add Habit (+)," the `AddHab
 
 To get started with HabitApp, follow these steps:
 
+1. Clone the repository.
+   ```bash
+   git clone https://github.com/FaisholStore/HABITAPP.git
