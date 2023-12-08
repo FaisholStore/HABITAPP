@@ -28,7 +28,6 @@ class RandomHabitAdapter(
         val pageData = habitMap[key] ?: return
         holder.bind(key, pageData)
     }
-
     override fun getItemCount() = habitMap.size
 
     private fun getIndexKey(position: Int) = habitMap.keys.toTypedArray().getOrNull(position)
