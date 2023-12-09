@@ -1,6 +1,5 @@
 package com.dicoding.habitapp.ui.countdown
 
-import NotificationWorker
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -13,6 +12,7 @@ import androidx.work.WorkManager
 import com.dicoding.habitapp.R
 import com.dicoding.habitapp.data.Habit
 import com.dicoding.habitapp.databinding.ActivityCountDownBinding
+import com.dicoding.habitapp.notification.NotificationWorker
 import com.dicoding.habitapp.utils.HABIT
 import com.dicoding.habitapp.utils.HABIT_ID
 import com.dicoding.habitapp.utils.HABIT_TITLE
