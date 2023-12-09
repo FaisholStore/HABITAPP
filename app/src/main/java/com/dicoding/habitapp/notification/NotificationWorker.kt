@@ -1,4 +1,5 @@
-import android.app.Notification
+package com.dicoding.habitapp.notification
+
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -7,6 +8,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
+import androidx.preference.PreferenceManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.dicoding.habitapp.R
@@ -17,22 +19,20 @@ import com.dicoding.habitapp.utils.NOTIFICATION_CHANNEL_ID
 
 class NotificationWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, params) {
 
-    // Mendapatkan data dari Worker
     private val habitId = inputData.getInt(HABIT_ID, 0)
     private val habitTitle = inputData.getString(HABIT_TITLE)
     private val messageNotification = applicationContext.getString(R.string.notify_content)
 
     override fun doWork(): Result {
-        // Mendapatkan preferensi pengguna untuk notifikasi
-        val prefManager = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val prefManager = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val shouldNotify = prefManager.getBoolean(applicationContext.getString(R.string.pref_key_notify), false)
 
+        //TODO 12 : If notification preference on, show notification with pending intent
         // Jika preferensi notifikasi aktif, tampilkan notifikasi
-        if (shouldNotify){
+        if (shouldNotify) {
             showNotification()
         }
 
-        // Hasil dari pekerjaan berhasil
         return Result.success()
     }
 
@@ -46,12 +46,15 @@ class NotificationWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, p
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             val channel = managerCompat.getNotificationChannel(NOTIFICATION_CHANNEL_ID)
             if (channel == null) {
-                val newChannel = NotificationChannel(NOTIFICATION_CHANNEL_ID, "Notification",NotificationManager.IMPORTANCE_DEFAULT)
+                val newChannel = NotificationChannel(
+                    NOTIFICATION_CHANNEL_ID,
+                    "notification",
+                    NotificationManager.IMPORTANCE_DEFAULT
+                )
                 managerCompat.createNotificationChannel(newChannel)
             }
         }
 
-        // Membuat objek NotificationCompat.Builder untuk membangun notifikasi
         val builder = NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notifications)
             .setContentTitle(habitTitle)
@@ -63,21 +66,15 @@ class NotificationWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, p
 
         builder.setAutoCancel(true)
 
-        // Menampilkan notifikasi menggunakan NotificationManager
         managerCompat.notify(habitId, builder.build())
     }
 
-    // Mendapatkan PendingIntent untuk membuka DetailHabitActivity
-    private fun getPendingIntent(habitId: Int): PendingIntent? {
+    private fun getPendingIntent(id: Int): PendingIntent? {
         val intent = Intent(applicationContext, DetailHabitActivity::class.java).apply {
-            putExtra(HABIT_ID, habitId)
+            putExtra(HABIT_ID, id)
         }
-
-        // Membuat TaskStackBuilder untuk membangun tumpukan aktivitas yang benar
         return TaskStackBuilder.create(applicationContext).run {
             addNextIntentWithParentStack(intent)
-
-            // Mendapatkan PendingIntent dengan tindakan yang sesuai dengan versi Android
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 getPendingIntent(
                     0,
