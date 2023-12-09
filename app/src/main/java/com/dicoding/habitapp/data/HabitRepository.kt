@@ -36,7 +36,7 @@ class HabitRepository(private val habitDao: HabitDao, private val executor: Exec
         val sortQuery = SortUtils.getSortedQuery(sortType)
         val config = PagedList.Config.Builder()
             .setEnablePlaceholders(true)
-            .setPageSize(10)
+            .setPageSize(20)
             .build()
         return LivePagedListBuilder(habitDao.getHabits(sortQuery), config)
             .build()
